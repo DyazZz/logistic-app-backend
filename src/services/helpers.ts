@@ -42,6 +42,8 @@ export function searchByQuery(
   const splittedQuery = searchQuery.toUpperCase().split(' ');
   const foundApplications = applications.filter((application) => {
     const parseApplication = { ...application };
+
+    //т.к. эти данные хранятся в виде числа, а пользователь вводит в поиск названия, то их нужно перед сравнением спарсить
     parseApplication.date = formatDate(application.date);
     parseApplication.status = formatStatus(application.status);
     if (
