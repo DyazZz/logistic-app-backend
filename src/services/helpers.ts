@@ -28,9 +28,9 @@ export function sortByFieldname(
   //если фильтр пустой - возвращаем исходный массив
   if (!fieldName) return applications;
 
-  return applications.sort((a, b) => {
-    return a[fieldName].toString().localeCompare(b[fieldName].toString());
-  });
+  return applications.sort((a, b) =>
+    a[fieldName].toString().localeCompare(b[fieldName].toString()),
+  );
 }
 
 export function searchByQuery(
@@ -49,6 +49,32 @@ export function searchByQuery(
     if (
       splittedQuery.every((word) =>
         JSON.stringify(parseApplication).toUpperCase().includes(word),
+      )
+    ) {
+      return application;
+    }
+  });
+  return foundApplications;
+}
+
+export function searchByQueryInField(
+  applications: Application[],
+  searchQuery: string,
+  fieldName: string,
+) {
+  if (!searchQuery) return applications;
+  const splittedQuery = searchQuery.toLowerCase().split(' ');
+
+  const foundApplications = applications.filter((application) => {
+    const parseApplication = { ...application };
+
+    //т.к. эти данные хранятся в виде числа, а пользователь вводит в поиск названия, то их нужно перед сравнением спарсить
+    parseApplication.date = formatDate(application.date);
+    parseApplication.status = formatStatus(application.status);
+
+    if (
+      splittedQuery.every((word) =>
+        parseApplication[fieldName].toLowerCase().includes(word),
       )
     ) {
       return application;

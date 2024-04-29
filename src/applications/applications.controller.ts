@@ -13,19 +13,23 @@ import {
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
-import { log } from 'console';
 
 @Controller('applications')
 export class ApplicationsController {
   constructor(private readonly applicationService: ApplicationsService) {}
 
-  @Get() //GET /applications?search=&filter=
+  @Get() //GET /applications?search=&column=&sort=
   findByQuery(
     @Query('search') searchQuery: string,
-    @Query('sort') filter: string,
+    @Query('column') columnName: string,
+    @Query('sort') sort: string,
   ) {
-    if (searchQuery || filter)
-      return this.applicationService.findAllWhere(searchQuery, filter);
+    if (searchQuery || sort)
+      return this.applicationService.findAllWhere(
+        searchQuery,
+        columnName,
+        sort,
+      );
     return this.applicationService.findAll();
   }
 
@@ -48,7 +52,6 @@ export class ApplicationsController {
     @Body(ValidationPipe)
     updateUserDto: UpdateApplicationDto,
   ) {
-    log(updateUserDto);
     return this.applicationService.update(id, updateUserDto);
   }
 

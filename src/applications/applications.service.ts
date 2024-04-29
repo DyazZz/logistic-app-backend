@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
-import { searchByQuery, sortByFieldname } from 'src/services/helpers';
+import {
+  searchByQuery,
+  searchByQueryInField,
+  sortByFieldname,
+} from 'src/services/helpers';
 import { Application } from 'src/customDatatypes';
 
 @Injectable()
@@ -67,6 +71,30 @@ export class ApplicationsService {
       status: 2,
       ATI: '12345',
     },
+    {
+      id: 6,
+      applicationUID: 'we47-qw60',
+      date: '1613724061348',
+      companyName: 'Yeti & CO. C',
+      driverName: 'Алексей',
+      driverPhone: '89199004556',
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco',
+      status: 2,
+      ATI: '12345',
+    },
+    {
+      id: 7,
+      applicationUID: 'we47-qw61',
+      date: '1613724061348',
+      companyName: 'Yeti & CO. C',
+      driverName: 'Алексей',
+      driverPhone: '89199004556',
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco',
+      status: 2,
+      ATI: '12345',
+    },
   ];
 
   findAll(status?: 1 | 2 | 3) {
@@ -123,12 +151,21 @@ export class ApplicationsService {
     return removedUser;
   }
 
-  findAllWhere(searchQuery: string, filter: string) {
+  findAllWhere(searchQuery: string, columnName: string, sortField: string) {
     const findApplications = [...this.applications];
 
-    const sortedApplications = sortByFieldname(findApplications, filter);
+    const sortedApplications = sortByFieldname(findApplications, sortField);
 
-    const searchedApplications = searchByQuery(sortedApplications, searchQuery);
+    let searchedApplications: Application[];
+
+    if (!columnName)
+      searchedApplications = searchByQuery(sortedApplications, searchQuery);
+    else
+      searchedApplications = searchByQueryInField(
+        sortedApplications,
+        searchQuery,
+        columnName,
+      );
 
     return searchedApplications;
   }
