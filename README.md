@@ -1,5 +1,5 @@
 # Прототип системы ведения заявок. Бэкенд.
-Тестовое задание YetiCrab
+
 ## Технологический стек:
 [Фронтенд](https://github.com/DyazZz/logistic-app-frontend)
 - React/Typescript
